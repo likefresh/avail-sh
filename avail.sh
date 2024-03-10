@@ -33,12 +33,12 @@ function install_node() {
 
 # 函数：检查命令是否存在
 exists() {
-  command -v "\$1" >/dev/null 2>&1
+  command -v "$1" >/dev/null 2>&1
 }
 
 # 函数：检查依赖项是否存在
 exists() {
-  command -v "\$1" >/dev/null 2>&1
+  command -v "$1" >/dev/null 2>&1
 }
 
 # 函数：安装依赖项（如果不存在）
@@ -66,6 +66,7 @@ install_dependencies() {
 # 安装必要的依赖项
 dependencies=(curl make clang pkg-config libssl-dev build-essential)
 install_dependencies "${dependencies[@]}"
+
 
 # 设置安装目录和发布 URL
 INSTALL_DIR="${HOME}/avail-light"
@@ -111,6 +112,8 @@ echo ====================================== 安装完成 =======================
 
 }
 
+
+
 # 查看Avail服务状态
 function check_service_status() {
     systemctl status availd
@@ -129,7 +132,6 @@ function check_wallet() {
 # 主菜单
 function main_menu() {
     clear
-    echo "自用avail轻节点部署："
     echo "请选择要执行的操作:"
     echo "1. 安装节点"
     echo "2. 查看Avail服务状态"
