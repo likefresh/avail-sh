@@ -1,5 +1,12 @@
 #!/bin/bash
 
+# 检查是否以root用户运行脚本
+if [ "$(id -u)" != "0" ]; then
+    echo "此脚本需要以root用户权限运行。"
+    echo "请尝试使用 'sudo -i' 命令切换到root用户，然后再次运行此脚本。"
+    exit 1
+fi
+
 # 脚本保存路径
 SCRIPT_PATH="$HOME/Avail-one.sh"
 
@@ -70,7 +77,7 @@ install_dependencies "${dependencies[@]}"
 
 # 设置安装目录和发布 URL
 INSTALL_DIR="${HOME}/avail-light"
-RELEASE_URL="https://github.com/availproject/avail-light/releases/download/v1.7.9/avail-light-linux-amd64.tar.gz"
+RELEASE_URL="https://github.com/availproject/avail-light/releases/download/v1.7.10/avail-light-linux-amd64.tar.gz"
 
 # 创建安装目录并进入
 mkdir -p "$INSTALL_DIR"
@@ -124,30 +131,38 @@ function view_logs() {
     sudo journalctl -f -u availd.service 
 }
 
-# 查询节点匹配的钱包地址（建议安装好后，就查询钱包地址，如果日志过长，该功能可能会失效）
+# 查询节点匹配的公钥（建议安装好后，就查询钱包地址，如果日志过长，该功能可能会失效）
 function check_wallet() {
-    journalctl -u availd | grep address
+    journalctl -u availd | grep "public key"
 }
 
 # 主菜单
 function main_menu() {
-    clear
-    echo "请选择要执行的操作:"
-    echo "1. 安装节点"
-    echo "2. 查看Avail服务状态"
-    echo "3. 节点日志查询"
-    echo "4. 查询节点匹配的钱包地址"
-    echo "5. 设置快捷键的功能"
-    read -p "请输入选项（1-5）: " OPTION
+    while true; do
+        clear
+        echo "脚本以及教程由推特用户大赌哥 @y95277777 编写，免费开源，请勿相信收费"
+        echo "================================================================"
+        echo "节点社区 Telegram 群组:https://t.me/niuwuriji"
+        echo "节点社区 Telegram 频道:https://t.me/niuwuriji"
+        echo "退出脚本，请按键盘ctrl c退出即可"
+        echo "请选择要执行的操作:"
+        echo "1. 安装节点"
+        echo "2. 查看Avail服务状态"
+        echo "3. 节点日志查询"
+        echo "4. 查询节点匹配的public key"
+        echo "5. 设置快捷键的功能"
+        read -p "请输入选项（1-5）: " OPTION
 
-    case $OPTION in
-    1) install_node ;;
-    2) check_service_status ;;
-    3) view_logs ;;
-    4) check_wallet ;;
-    5) check_and_set_alias ;;  
-    *) echo "无效选项。" ;;
-    esac
+        case $OPTION in
+        1) install_node ;;
+        2) check_service_status ;;
+        3) view_logs ;;
+        4) check_wallet ;;
+        5) check_and_set_alias ;;
+        *) echo "无效选项，请重新输入。" ;;
+        esac
+        read -p "按任意键返回菜单..." 
+    done
 }
 
 # 显示主菜单
